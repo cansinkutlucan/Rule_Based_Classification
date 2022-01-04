@@ -1,5 +1,5 @@
 import pandas as pd
-persona = pd.read_csv('VBO_BootCamp_Donem/2.Hafta/persona.csv')
+persona = pd.read_csv('persona.csv')
 
 #Question 1: How many unique SOURCE are there? What are their frequencies?
 print("Unique SOURCE", persona["SOURCE"].nunique())
@@ -33,11 +33,12 @@ agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], bins, labels=lab)
 agg_df.head()
 
 agg_df["customer_level_based"] = [val[0] +"_" + val[1] +"_"+ val[2] + "_" +val[5] for val in agg_df.values]
-agg_df.drop(['COUNTRY','SOURCE','SEX','AGE','AGE_CAT'],axis=1,inplace=True)
-agg_df
+agg_df = agg_df[["customer_level_based", "PRICE"]]
+
+agg_df = agg_df.groupby("customer_level_based").agg({"PRICE": "mean"})
+agg_df = agg_df.reset_index()
 
 agg_df["SEGMENT"] = pd.qcut(agg_df['PRICE'],4,labels=['D','C','B','A'])
-agg_df.groupby('SEGMENT')[['customer_level_based','PRICE']].agg({'PRICE':'mean'})
 agg_df
 
 new_user = 'tur_android_female_19_23'
